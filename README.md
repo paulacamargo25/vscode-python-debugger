@@ -35,3 +35,11 @@ If you want to disable the Python Debugger extension, you can [disable this exte
 
 ## Data and telemetry
 The Debubpy Extension for Visual Studio Code collects usage data and sends it to Microsoft to help improve our products and services. Read our [privacy statement](https://privacy.microsoft.com/privacystatement) to learn more. This extension respects the `telemetry.enableTelemetry` setting which you can learn more about at https://code.visualstudio.com/docs/supporting/faq#_how-to-disable-telemetry-reporting.
+
+## Versions
+
+| **Extension version** 	| **Debugpy Version** 	| **Python Versions Supported** 	|
+|-----------------------	|---------------------	|-------------------------------	|
+| 2023.1.12492010       	| 1.5.1               	| Python 3.6 and below          	|
+| 2023.3                	| 1.7.0               	| >=3.7                         	|
+| latest                	| 1.8.0               	|                               	|
