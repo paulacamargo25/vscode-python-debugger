@@ -29,6 +29,9 @@ export function resolveVariables(
         const workspaceFolder = folder ? getWorkspaceFolder(folder.uri) : undefined;
         const variablesObject: { [key: string]: any } = {};
         variablesObject.workspaceFolder = workspaceFolder ? workspaceFolder.uri.fsPath : rootFolder;
+        Object.keys(process.env).forEach((key) => {
+            variablesObject[`env:${key}`] = variablesObject[`env.${key}`] = process.env[key];
+        });
 
         const regexp = /\$\{(.*?)\}/g;
         return value.replace(regexp, (match: string, name: string) => {
