@@ -49,6 +49,7 @@ import { openReportIssue } from './common/application/commands/reportIssueComman
 import { buildApi } from './api';
 import { IExtensionApi } from './apiTypes';
 import { registerHexDebugVisualizationTreeProvider } from './debugger/visualizers/inlineHexDecoder';
+import { DebugProfileCreationPicker } from './debugger/configuration/debugProfile/debugProfileCreationQuickPicker';
 
 export async function registerDebugger(context: IExtensionContext): Promise<IExtensionApi> {
     const childProcessAttachService = new ChildProcessAttachService();
@@ -126,6 +127,10 @@ export async function registerDebugger(context: IExtensionContext): Promise<IExt
         registerCommand(Commands.PickArguments, () => {
             return window.showInputBox({ title: pickArgsInput.title, prompt: pickArgsInput.prompt });
         }),
+    );
+    const debugProfileCreationPicker = new DebugProfileCreationPicker();
+    context.subscriptions.push(
+        registerCommand(Commands.DebugProfileCreation, () => debugProfileCreationPicker.showQuickPick()),
     );
 
     const debugAdapterDescriptorFactory = new DebugAdapterDescriptorFactory(persistentState);
