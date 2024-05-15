@@ -20,6 +20,7 @@ import { buildPyramidLaunchConfiguration } from './providers/pyramidLaunch';
 import { buildRemoteAttachConfiguration } from './providers/remoteAttach';
 import { IDebugConfigurationResolver } from './types';
 import { buildFileWithArgsLaunchDebugConfiguration } from './providers/fileLaunchWithArgs';
+import { buildDebugProfileLaunchDebugConfiguration } from './providers/debugProfileLaunch';
 
 @injectable()
 export class PythonDebugConfigurationService implements IDebugConfigurationService {
@@ -156,6 +157,11 @@ export class PythonDebugConfigurationService implements IDebugConfigurationServi
                 type: DebugConfigurationType.launchPyramid,
                 description: DebugConfigStrings.pyramid.selectConfiguration.description,
             },
+            {
+                label: 'Debug Profile',
+                type: DebugConfigurationType.debugProfile,
+                description: 'Create a configuration for a specific debug profile',
+            },
         ];
         const debugConfigurations = new Map<
             DebugConfigurationType,
@@ -173,6 +179,7 @@ export class PythonDebugConfigurationService implements IDebugConfigurationServi
         debugConfigurations.set(DebugConfigurationType.pidAttach, buildPidAttachConfiguration);
         debugConfigurations.set(DebugConfigurationType.remoteAttach, buildRemoteAttachConfiguration);
         debugConfigurations.set(DebugConfigurationType.launchPyramid, buildPyramidLaunchConfiguration);
+        debugConfigurations.set(DebugConfigurationType.debugProfile, buildDebugProfileLaunchDebugConfiguration);
 
         state.config = {};
         const pick = await input.showQuickPick<

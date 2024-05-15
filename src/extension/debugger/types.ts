@@ -38,6 +38,7 @@ export enum DebugConfigurationType {
     launchModule = 'launchModule',
     launchPyramid = 'launchPyramid',
     pidAttach = 'pidAttach',
+    debugProfile = 'debugProfile',
 }
 
 export enum PythonPathSource {
