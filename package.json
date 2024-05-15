@@ -70,6 +70,11 @@
                 "category": "Python Debugger",
                 "command": "debugpy.reportIssue",
                 "title": "%debugpy.command.reportIssue.title%"
+            },
+            {
+                "category": "Python Debugger",
+                "command": "debugpy.debugProfileCreation",
+                "title": "%debugpy.command.debugProfileCreation.title%"
             }
         ],
         "menus": {
@@ -130,6 +135,12 @@
                     "description": "%debugpy.debugJustMyCode%",
                     "scope": "resource",
                     "type": "boolean"
+                },
+                "debugpy.configs": {
+                    "default": [],
+                    "description": "Debug Configurations",
+                    "scope": "resource",
+                    "type": "array"
                 }
             },
             "title": "Python Debugger",

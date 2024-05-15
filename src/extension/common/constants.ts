@@ -40,6 +40,7 @@ export namespace Commands {
     export const SelectDebugConfig = 'debugpy.SelectAndInsertDebugConfiguration';
     export const Set_Interpreter = 'python.setInterpreter';
     export const ReportIssue = 'debugpy.reportIssue';
+    export const DebugProfileCreation = 'debugpy.debugProfileCreation';
 }
 
 export type Channel = 'stable' | 'insiders';
