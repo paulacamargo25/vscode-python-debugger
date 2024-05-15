@@ -61,6 +61,7 @@ export interface IQuickPickParameters<T extends QuickPickItem, E = any> {
     customButtonSetups?: QuickInputButtonSetup[];
     matchOnDescription?: boolean;
     matchOnDetail?: boolean;
+    canSelectMany?: boolean;
     keepScrollPosition?: boolean;
     acceptFilterBoxTextAsSelection?: boolean;
     /**
@@ -80,6 +81,7 @@ interface InputBoxParameters {
     step?: number;
     totalSteps?: number;
     value: string;
+    placeholder?: string;
     prompt: string;
     buttons?: QuickInputButton[];
     validate(value: string): Promise<string | undefined>;
@@ -133,6 +135,7 @@ export class MultiStepInput<S> implements IMultiStepInput<S> {
         acceptFilterBoxTextAsSelection,
         onChangeItem,
         keepScrollPosition,
+        canSelectMany,
         onDidTriggerItemButton,
         initialize,
     }: P): Promise<MultiStepInputQuickPickResponseType<T, P>> {
@@ -143,6 +146,7 @@ export class MultiStepInput<S> implements IMultiStepInput<S> {
         input.totalSteps = totalSteps;
         input.placeholder = placeholder;
         input.ignoreFocusOut = true;
+        input.canSelectMany = !!canSelectMany;
         input.items = items;
         input.matchOnDescription = matchOnDescription || false;
         input.matchOnDetail = matchOnDetail || false;
@@ -196,7 +200,7 @@ export class MultiStepInput<S> implements IMultiStepInput<S> {
                     }
                 }
             }),
-            input.onDidChangeSelection((selectedItems) => deferred.resolve(selectedItems[0])),
+            // input.onDidChangeSelection((selectedItems) => deferred.resolve(selectedItems[0])),
             input.onDidHide(() => {
                 if (!deferred.completed) {
                     deferred.resolve(undefined);
@@ -214,20 +218,24 @@ export class MultiStepInput<S> implements IMultiStepInput<S> {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     deferred.resolve(input.value as any);
                 }),
+            );
+        }
+
+        if (canSelectMany) {
+            disposables.push(
                 input.onDidChangeSelection((selectedItems) => {
-                    if (input.value) {
-                        deferred.resolve(input.value as any);
-                    } else {
-                        deferred.resolve(selectedItems[0]);
-                    }
+                    const a = selectedItems;
+                }),
+                input.onDidAccept(() => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    deferred.resolve(input.selectedItems as any);
                 }),
             );
         } else {
             disposables.push(
-                input.onDidChangeSelection((selectedItems) => {
-                    deferred.resolve(selectedItems[0]);
-                }),
-            );
+                input.onDidChangeSelection((selectedItems) => deferred.resolve(selectedItems[0])),
+
+            )
         }
 
         try {
@@ -243,6 +251,7 @@ export class MultiStepInput<S> implements IMultiStepInput<S> {
         totalSteps,
         value,
         prompt,
+        placeholder,
         validate,
         password,
         buttons,
@@ -252,6 +261,7 @@ export class MultiStepInput<S> implements IMultiStepInput<S> {
             return await new Promise<MultiStepInputInputBoxResponseType<P>>((resolve, reject) => {
                 const input = window.createInputBox();
                 input.title = title;
+                input.placeholder = placeholder;
                 input.step = step;
                 input.totalSteps = totalSteps;
                 input.password = !!password;
