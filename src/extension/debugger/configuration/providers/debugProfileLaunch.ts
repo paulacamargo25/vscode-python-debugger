@@ -4,9 +4,9 @@
 'use strict';
 
 import { DebugConfigStrings } from '../../../common/utils/localize';
-import { IQuickPickParameters, MultiStepInput } from '../../../common/multiStepInput';
+import { IQuickPickParameters, InputFlowAction, MultiStepInput } from '../../../common/multiStepInput';
 import { DebuggerTypeName } from '../../../constants';
-import { LaunchRequestArguments } from '../../../types';
+import { DebugPurpose, LaunchRequestArguments } from '../../../types';
 import { DebugConfigurationState, DebugConfigurationType } from '../../types';
 import { QuickPickItem, QuickPickItemKind } from 'vscode';
 import { QuickPickType } from './providerQuickPick/types';
@@ -25,6 +25,7 @@ export async function buildDebugProfileLaunchDebugConfiguration(
         request: 'launch',
         program: '${file}',
         console: 'integratedTerminal',
+        purpose: [DebugPurpose.DebugInTerminal]
     };
 
     let debugProfileOptions = getConfiguration('debugpy')
@@ -55,7 +56,7 @@ export async function buildDebugProfileLaunchDebugConfiguration(
         return;
     } else if (selection.label === 'Create new configuration') {
         await executeCommand(Commands.DebugProfileCreation);
-        return;
+        return Promise.reject(InputFlowAction.resume);
     }
 
     config.name = selection.label;
