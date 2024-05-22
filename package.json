@@ -9,6 +9,7 @@
         "contribIssueReporter",
         "debugVisualization",
         "contribViewsWelcome"
+        "terminalShellIntegration"
     ],
     "license": "MIT",
     "homepage": "https://github.com/Microsoft/vscode-python-debugger",
