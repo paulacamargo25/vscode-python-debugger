@@ -35,6 +35,7 @@ function getDefaultDebugConfiguration(uri: Uri, e:TerminalShellExecutionStartEve
 
 export async function registerTriggerForDebugpyInTerminal(e: TerminalShellExecutionStartEvent) {
     if (e.execution.commandLine.isTrusted && checkCommand(e.execution.commandLine.value)) {
+        // e.shellIntegration.executeCommand("\x03");
         const commandLine = e.execution.commandLine.value;
         const path = commandLine.split(' ').slice(1).join(' ');
         const file = await getFile(e, path);
