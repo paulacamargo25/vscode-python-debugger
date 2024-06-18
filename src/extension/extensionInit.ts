@@ -24,7 +24,7 @@ import { ChildProcessAttachService } from './debugger/hooks/childProcessAttachSe
 import { PythonDebugConfigurationService } from './debugger/configuration/debugConfigurationService';
 import { AttachConfigurationResolver } from './debugger/configuration/resolvers/attach';
 import { LaunchConfigurationResolver } from './debugger/configuration/resolvers/launch';
-import { MultiStepInputFactory } from './common/multiStepInput';
+import { MultiStepInput, MultiStepInputFactory } from './common/multiStepInput';
 import { sendTelemetryEvent } from './telemetry';
 import { Commands } from './common/constants';
 import { EventName } from './telemetry/constants';
@@ -43,13 +43,15 @@ import { LaunchJsonUpdaterServiceHelper } from './debugger/configuration/launch.
 import { ignoreErrors } from './common/promiseUtils';
 import { DebugVisualizers, pickArgsInput } from './common/utils/localize';
 import { DebugPortAttributesProvider } from './debugger/debugPort/portAttributesProvider';
-import { getConfigurationsByUri } from './debugger/configuration/launch.json/launchJsonReader';
+import { getDebugProfileConfiguration } from './debugger/configuration/launch.json/launchJsonReader';
 import { DebugpySocketsHandler } from './debugger/hooks/debugpySocketsHandler';
 import { openReportIssue } from './common/application/commands/reportIssueCommand';
 import { buildApi } from './api';
 import { IExtensionApi } from './apiTypes';
 import { registerHexDebugVisualizationTreeProvider } from './debugger/visualizers/inlineHexDecoder';
 import { DebugProfileCreationPicker } from './debugger/configuration/debugProfile/debugProfileCreationQuickPicker';
+import { showDebugSettingsProfileCreationPicker } from './debugger/configuration/debugProfile/debugProfileCreationQuickPicker';
+import { DebugProfileArguments, DebugProfileState, DebugProfileType } from './debugger/types';
 
 export async function registerDebugger(context: IExtensionContext): Promise<IExtensionApi> {
     const childProcessAttachService = new ChildProcessAttachService();
@@ -93,25 +95,44 @@ export async function registerDebugger(context: IExtensionContext): Promise<IExt
             startDebugging(undefined, config);
         }),
     );
+    const multiStep = new MultiStepInput<DebugProfileState>();
 
     context.subscriptions.push(
-        registerCommand(Commands.Debug_Using_Launch_Config, async (file?: Uri) => {
-            sendTelemetryEvent(EventName.DEBUG_USING_LAUNCH_CONFIG_BUTTON);
+        registerCommand(Commands.Debug_Using_Debug_Profile, async (file?: Uri) => {
+            sendTelemetryEvent(EventName.DEBUG_USING_DEBUG_PROFILE_BUTTON);
             const interpreter = await getInterpreterDetails(file);
 
             if (!interpreter.path) {
                 runPythonExtensionCommand(Commands.TriggerEnvironmentSelection, file).then(noop, noop);
                 return;
             }
-            const configs = await getConfigurationsByUri(file);
-            if (configs.length > 0) {
-                executeCommand('workbench.action.debug.selectandstart');
-            } else {
-                await executeCommand('debug.addConfiguration');
-                if (file) {
-                    await window.showTextDocument(file);
+            const debugProfileConfigs: DebugProfileArguments[] = getConfiguration('python').get<[]>('configs', [])
+                .filter((item: DebugProfileArguments) => item.debugProfile?.includes(DebugProfileType.debug))
+            
+            if (debugProfileConfigs.length > 0) {
+                if (debugProfileConfigs.length == 1) {
+                    const config = await getDebugProfileConfiguration(debugProfileConfigs[0].name, file);
+                    startDebugging(undefined, config);
+                } else {
+                    const selection = await window.showQuickPick(
+                        debugProfileConfigs.map((config: any) => {
+                            return {
+                                label: config.name,
+                                config: config,
+                            };
+                        }),
+                        {
+                            title: 'Run Debug Profile Configuration',
+                            placeHolder: 'Select a debug profile configuration',
+                        }
+                    );
+                    if (selection) {
+                        const config = await getDebugProfileConfiguration(selection.label, file);
+                        startDebugging(undefined, config);
+                    }
                 }
-                executeCommand('workbench.action.debug.start', file?.toString());
+            } else {
+                await showDebugSettingsProfileCreationPicker(multiStep);
             }
         }),
     );
@@ -128,9 +149,11 @@ export async function registerDebugger(context: IExtensionContext): Promise<IExt
             return window.showInputBox({ title: pickArgsInput.title, prompt: pickArgsInput.prompt });
         }),
     );
-    const debugProfileCreationPicker = new DebugProfileCreationPicker();
     context.subscriptions.push(
-        registerCommand(Commands.DebugProfileCreation, () => debugProfileCreationPicker.showQuickPick()),
+        registerCommand(
+            Commands.DebugProfileCreation,
+            async () => await showDebugSettingsProfileCreationPicker(multiStep),
+        ),
     );
 
     const debugAdapterDescriptorFactory = new DebugAdapterDescriptorFactory(persistentState);

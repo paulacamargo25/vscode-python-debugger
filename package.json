@@ -48,9 +48,9 @@
             },
             {
                 "category": "Python Debugger",
-                "command": "debugpy.debugUsingLaunchConfig",
+                "command": "debugpy.debugUsingDebugProfile",
                 "icon": "$(debug-alt)",
-                "title": "%debugpy.command.debugUsingLaunchConfig.title%"
+                "title": "%debugpy.command.debugUsingDebugProfile.title%"
             },
             {
                 "category": "Python Debugger",
@@ -98,9 +98,9 @@
                 },
                 {
                     "category": "Python Debugger",
-                    "command": "debugpy.debugUsingLaunchConfig",
+                    "command": "debugpy.debugUsingDebugProfile",
                     "icon": "$(debug-alt)",
-                    "title": "%debugpy.command.debugUsingLaunchConfig.title%",
+                    "title": "%debugpy.command.debugUsingDebugProfile.title%",
                     "when": "!virtualWorkspace && shellExecutionSupported && editorLangId == python"
                 },
                 {
@@ -122,8 +122,8 @@
                     "when": "resourceLangId == python && !isInDiffEditor && !virtualWorkspace && shellExecutionSupported"
                 },
                 {
-                    "command": "debugpy.debugUsingLaunchConfig",
-                    "title": "%debugpy.command.debugUsingLaunchConfig.title%",
+                    "command": "debugpy.debugUsingDebugProfile",
+                    "title": "%debugpy.command.debugUsingDebugProfile.title%",
                     "when": "resourceLangId == python && !isInDiffEditor && !virtualWorkspace && shellExecutionSupported"
                 }
             ]
@@ -136,7 +136,7 @@
                     "scope": "resource",
                     "type": "boolean"
                 },
-                "debugpy.configs": {
+                "python.configs": {
                     "default": [],
                     "description": "Debug Configurations",
                     "scope": "resource",
