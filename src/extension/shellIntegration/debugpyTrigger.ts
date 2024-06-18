@@ -3,7 +3,7 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { TerminalShellExecutionStartEvent, Uri } from 'vscode';
+import { DebugConfiguration, TerminalShellExecutionStartEvent, Uri } from 'vscode';
 import { getInterpreterDetails, runPythonExtensionCommand } from '../common/python';
 import { Commands } from '../common/constants';
 import { noop } from 'lodash';
@@ -22,29 +22,21 @@ async function getFile(e: TerminalShellExecutionStartEvent, filePath: string): P
     return Uri.parse(path.join(e.execution.cwd?.path || "", filePath));
 }
 
-function getDefaultDebugConfiguration(uri: Uri, e:TerminalShellExecutionStartEvent){
+function getDefaultDebugConfiguration(): DebugConfiguration {
     return {
-        name: `Debug ${uri ? path.basename(uri.fsPath) : 'File'}`,
+        name: `Debug File`,
         type: DebuggerTypeName,
-        request: 'launch',
-        program: uri?.fsPath,
-        console: 'integratedTerminal',
-        consoleName:e.terminal.name
+        request: 'attach',
+        connect: {
+            host: 'localhost',
+            port: 5679
+        }
     };
 }
 
 export async function registerTriggerForDebugpyInTerminal(e: TerminalShellExecutionStartEvent) {
     if (e.execution.commandLine.isTrusted && checkCommand(e.execution.commandLine.value)) {
-        // e.shellIntegration.executeCommand("\x03");
-        const commandLine = e.execution.commandLine.value;
-        const path = commandLine.split(' ').slice(1).join(' ');
-        const file = await getFile(e, path);
-        const interpreter = await getInterpreterDetails(file);
-        if (!interpreter.path) {
-            runPythonExtensionCommand(Commands.TriggerEnvironmentSelection, file).then(noop, noop);
-            return;
-        }
-        const config = getDefaultDebugConfiguration(file, e);
-        startDebugging(undefined, config);        
+        const config = getDefaultDebugConfiguration();
+        startDebugging(undefined, config);
     }
 }
