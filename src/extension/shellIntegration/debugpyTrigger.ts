@@ -12,7 +12,7 @@ import { DebuggerTypeName } from '../constants';
 
 function checkCommand(command: string): boolean {
     const lower = command.toLowerCase();
-    return lower.startsWith('debugpy');
+    return lower.startsWith('python -m debugpy');
 }
 
 async function getFile(e: TerminalShellExecutionStartEvent, filePath: string): Promise<Uri> {

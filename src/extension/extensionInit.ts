@@ -54,6 +54,8 @@ import { registerHexDebugVisualizationTreeProvider } from './debugger/visualizer
 import { PythonInlineValueProvider } from './debugger/inlineValue/pythonInlineValueProvider';
 import { traceLog } from './common/log/logging';
 import { registerTriggerForDebugpyInTerminal } from './shellIntegration/debugpyTrigger';
+import { addPathToPythonpath } from './shellIntegration/utils';
+import { appendPythonPath } from './common/variables/environment';
 
 export async function registerDebugger(context: IExtensionContext): Promise<IExtensionApi> {
     const childProcessAttachService = new ChildProcessAttachService();
@@ -247,6 +249,8 @@ export async function registerDebugger(context: IExtensionContext): Promise<IExt
         'dynamicPythonConfigAvailable',
         window.activeTextEditor?.document.languageId === 'python',
     );
+    
+    appendPythonPath(process.env, "my-random-path", )
 
     context.subscriptions.push(
         window.onDidStartTerminalShellExecution(async (e) => {await registerTriggerForDebugpyInTerminal(e)})
