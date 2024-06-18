@@ -92,7 +92,7 @@ export async function updateSetting(
         target: configTarget || ConfigurationTarget.WorkspaceFolder,
     };
     let settingsInfo = defaultSetting;
-    if (section === 'debugpy' && configTarget !== ConfigurationTarget.Global) {
+    if ((section === 'debugpy' || section === 'python') && configTarget !== ConfigurationTarget.Global) {
         settingsInfo = getSettingsUriAndTarget(resource);
     }
 

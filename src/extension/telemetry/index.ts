@@ -266,9 +266,9 @@ export interface IEventNamePropertyMapping {
      * Telemetry event sent when debug using launch.json button was used to debug.
      */
     /* __GDPR__
-        "debug_using_launch_config_button" : { "owner": "paulacamargo25" }
+        "debug_using_debug_profile_button" : { "owner": "paulacamargo25" }
     */
-    [EventName.DEBUG_USING_LAUNCH_CONFIG_BUTTON]: never | undefined;
+    [EventName.DEBUG_USING_DEBUG_PROFILE_BUTTON]: never | undefined;
     /**
      * Telemetry event captured when debug adapter executable is created
      */

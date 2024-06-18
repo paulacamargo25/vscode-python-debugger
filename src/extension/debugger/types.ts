@@ -11,6 +11,8 @@ import {
     DebugAdapterTrackerFactory,
     DebugConfigurationProvider,
     Disposable,
+    QuickPickItem,
+    QuickPickItemKind,
     WorkspaceFolder,
 } from 'vscode';
 
@@ -22,11 +24,38 @@ export interface IDebugConfigurationService extends DebugConfigurationProvider {
 export const IDynamicDebugConfigurationService = Symbol('IDynamicDebugConfigurationService');
 export interface IDynamicDebugConfigurationService extends DebugConfigurationProvider {}
 
+export enum DebugProfileType {
+    debug = 'debug',
+    debugTesting = 'debug.testing',
+}
+
+export type DebugProfileArguments = {
+    name: string;
+    debugProfile?: DebugProfileType[];
+};
+
+export type DebugProfileState = {
+    config: Partial<DebugProfileArguments>;
+};
+
 export type DebugConfigurationState = {
     config: Partial<DebugConfigurationArguments>;
     folder?: WorkspaceFolder;
     token?: CancellationToken;
 };
+
+export interface DebugProfileConfigQuickPickItem extends QuickPickItem {
+    item: DebugProfileArguments;
+    description: string;
+    kind?: QuickPickItemKind;
+}
+
+export interface SeparatorQuickPickItem extends QuickPickItem {
+    label: string;
+    kind?: QuickPickItemKind;
+}
+
+export type DebugProfilePickType = DebugProfileConfigQuickPickItem | SeparatorQuickPickItem;
 
 export enum DebugConfigurationType {
     launchFile = 'launchFile',

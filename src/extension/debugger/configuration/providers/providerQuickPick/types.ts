@@ -2,15 +2,12 @@
 // Licensed under the MIT License.
 
 import { QuickPickItem, QuickPickItemKind, Uri } from 'vscode';
+import { SeparatorQuickPickItem } from '../../../types';
 
 export interface PathQuickPickItem extends QuickPickItem {
     filePath: Uri;
     kind?: QuickPickItemKind;
     description: string;
-}
-export interface SeparatorQuickPickItem extends QuickPickItem {
-    label: string;
-    kind?: QuickPickItemKind;
 }
 
 export type QuickPickType = PathQuickPickItem | SeparatorQuickPickItem;
