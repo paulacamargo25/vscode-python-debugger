@@ -106,9 +106,10 @@ export async function registerDebugger(context: IExtensionContext): Promise<IExt
                 runPythonExtensionCommand(Commands.TriggerEnvironmentSelection, file).then(noop, noop);
                 return;
             }
-            const debugProfileConfigs: DebugProfileArguments[] = getConfiguration('python').get<[]>('configs', [])
-                .filter((item: DebugProfileArguments) => item.debugProfile?.includes(DebugProfileType.debug))
-            
+            const debugProfileConfigs: DebugProfileArguments[] = getConfiguration('python')
+                .get<[]>('configs', [])
+                .filter((item: DebugProfileArguments) => item.debugProfile?.includes(DebugProfileType.debug));
+
             if (debugProfileConfigs.length > 0) {
                 if (debugProfileConfigs.length == 1) {
                     const config = await getDebugProfileConfiguration(debugProfileConfigs[0].name, file);
@@ -124,7 +125,7 @@ export async function registerDebugger(context: IExtensionContext): Promise<IExt
                         {
                             title: 'Run Debug Profile Configuration',
                             placeHolder: 'Select a debug profile configuration',
-                        }
+                        },
                     );
                     if (selection) {
                         const config = await getDebugProfileConfiguration(selection.label, file);
