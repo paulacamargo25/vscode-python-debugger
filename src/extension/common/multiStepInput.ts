@@ -223,19 +223,13 @@ export class MultiStepInput<S> implements IMultiStepInput<S> {
 
         if (canSelectMany) {
             disposables.push(
-                input.onDidChangeSelection((selectedItems) => {
-                    const a = selectedItems;
-                }),
                 input.onDidAccept(() => {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     deferred.resolve(input.selectedItems as any);
                 }),
             );
         } else {
-            disposables.push(
-                input.onDidChangeSelection((selectedItems) => deferred.resolve(selectedItems[0])),
-
-            )
+            disposables.push(input.onDidChangeSelection((selectedItems) => deferred.resolve(selectedItems[0])));
         }
 
         try {

@@ -4,65 +4,103 @@
 'use strict';
 
 import { DebugConfigStrings } from '../../../common/utils/localize';
-import { IQuickPickParameters, InputFlowAction, MultiStepInput } from '../../../common/multiStepInput';
+import { IQuickPickParameters, MultiStepInput } from '../../../common/multiStepInput';
 import { DebuggerTypeName } from '../../../constants';
-import { DebugPurpose, LaunchRequestArguments } from '../../../types';
-import { DebugConfigurationState, DebugConfigurationType } from '../../types';
-import { QuickPickItem, QuickPickItemKind } from 'vscode';
-import { QuickPickType } from './providerQuickPick/types';
-import { executeCommand, getConfiguration } from '../../../common/vscodeapi';
-import { Commands } from '../../../common/constants';
+import { DebugConfigurationArguments } from '../../../types';
+import {
+    DebugConfigurationState,
+    DebugConfigurationType,
+    DebugProfileArguments,
+    DebugProfileConfigQuickPickItem,
+    DebugProfilePickType,
+    DebugProfileType,
+} from '../../types';
+import { QuickPickItemKind } from 'vscode';
+import { getConfiguration } from '../../../common/vscodeapi';
 import { sendTelemetryEvent } from '../../../telemetry';
 import { EventName } from '../../../telemetry/constants';
+import { showDebugSettingsProfileCreationPicker } from '../debugProfile/debugProfileCreationQuickPicker';
 
 export async function buildDebugProfileLaunchDebugConfiguration(
     input: MultiStepInput<DebugConfigurationState>,
     state: DebugConfigurationState,
 ): Promise<void> {
-    const config: Partial<LaunchRequestArguments> = {
-        name: '',
-        type: DebuggerTypeName,
-        request: 'launch',
-        program: '${file}',
-        console: 'integratedTerminal',
-        purpose: [DebugPurpose.DebugInTerminal]
-    };
-
-    let debugProfileOptions = getConfiguration('debugpy')
-        .get<[]>('configs', [])
-        .filter((item: any) => item.type == 'terminal' && item.subtype.includes('debug'))
-        .map((item: any) => {
+    const profileConfigs = getConfiguration('python').get<[]>('configs', []);
+    const debugProfileOptions: DebugProfileConfigQuickPickItem[] = profileConfigs
+        .filter((item: DebugProfileArguments) => item.debugProfile?.includes(DebugProfileType.debug))
+        .map((item: DebugProfileArguments) => {
             return {
                 label: item.name,
-                config: item,
+                item: item,
+                description: `(${DebugProfileType.debug})`,
             };
         });
 
-    let options: QuickPickItem[] = [
+    const testingDebugProfileOptions: DebugProfileConfigQuickPickItem[] = profileConfigs
+        .filter((item: DebugProfileArguments) => item.debugProfile?.includes(DebugProfileType.debugTesting))
+        .map((item: DebugProfileArguments) => {
+            return {
+                label: item.name,
+                item: item,
+                description: `(${DebugProfileType.debugTesting})`,
+            };
+        });
+
+    let options: DebugProfilePickType[] = [
+        { label: DebugProfileType.debug, kind: QuickPickItemKind.Separator },
         ...debugProfileOptions,
+        { label: DebugProfileType.debugTesting, kind: QuickPickItemKind.Separator },
+        ...testingDebugProfileOptions,
         { label: '', kind: QuickPickItemKind.Separator },
-        { label: 'Create new configuration', description: 'Create a new debug configuration' },
+        {
+            label: DebugConfigStrings.debugProfile.createNew.label,
+            description: DebugConfigStrings.debugProfile.createNew.description,
+        },
     ];
 
-    const selection = await input.showQuickPick<QuickPickType, IQuickPickParameters<QuickPickType>>({
-        placeholder: DebugConfigStrings.django.djangoConfigPromp.prompt,
+    const selection = await input.showQuickPick<DebugProfilePickType, IQuickPickParameters<DebugProfilePickType>>({
+        placeholder: DebugConfigStrings.debugProfile.configPromp.prompt,
         items: options,
         acceptFilterBoxTextAsSelection: true,
         matchOnDescription: true,
-        title: DebugConfigStrings.django.djangoConfigPromp.title,
+        title: DebugConfigStrings.debugProfile.configPromp.title,
     });
 
     if (selection === undefined) {
         return;
-    } else if (selection.label === 'Create new configuration') {
-        await executeCommand(Commands.DebugProfileCreation);
-        return Promise.reject(InputFlowAction.resume);
+    } else if (selection.label === DebugConfigStrings.debugProfile.createNew.label) {
+        await input.run(() => showDebugSettingsProfileCreationPicker(input), state);
+        return await input.run(() => buildDebugProfileLaunchDebugConfiguration(input, state), state);
+    } else if ('item' in selection) {
+        if (selection.item.debugProfile?.includes(DebugProfileType.debug)) {
+            Object.assign(state.config, getDefaultDebugConfig(selection.item));
+        } else if (selection.item.debugProfile?.includes(DebugProfileType.debugTesting)) {
+            Object.assign(state.config, getDefaultTestingDebugConfig(selection.item));
+        }
     }
-
-    config.name = selection.label;
 
     sendTelemetryEvent(EventName.DEBUGGER_CONFIGURATION_PROMPTS, undefined, {
         configurationType: DebugConfigurationType.debugProfile,
     });
-    Object.assign(state.config, config);
+}
+
+function getDefaultDebugConfig(item: any): Partial<DebugConfigurationArguments> {
+    return {
+        name: item.name,
+        type: DebuggerTypeName,
+        request: 'launch',
+        program: '${file}',
+        console: 'integratedTerminal',
+        debugProfile: DebugProfileType.debug,
+    };
+}
+
+function getDefaultTestingDebugConfig(item: any): Partial<DebugConfigurationArguments> {
+    return {
+        name: item.name,
+        type: DebuggerTypeName,
+        request: 'test',
+        subProcess: true,
+        debugProfile: DebugProfileType.debugTesting,
+    };
 }

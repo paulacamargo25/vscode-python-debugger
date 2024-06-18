@@ -5,64 +5,56 @@
 
 import { QuickPickItem } from 'vscode';
 import { MultiStepInput } from '../../../common/multiStepInput';
-import { DebugConfigurationState } from '../../types';
+import { DebugConfigurationState, DebugProfileArguments, DebugProfileState, DebugProfileType } from '../../types';
 import { updateSetting } from '../../../common/settings';
-import { getConfiguration } from '../../../common/vscodeapi';
+import { workspace } from 'vscode';
+import { DebugProfileCreation } from '../../../common/utils/localize';
 
-export class DebugProfileCreationPicker {
-    constructor() {}
+export async function showDebugSettingsProfileCreationPicker(
+    input: MultiStepInput<DebugProfileState> | MultiStepInput<DebugConfigurationState>,
+): Promise<void> {
+    const profileState = {
+        config: {
+            name: '',
+            debugProfile: [],
+        } as Partial<DebugProfileArguments>,
+    } as DebugProfileState;
 
-    public showQuickPick(): Promise<string> {
-        return new Promise<string>(async (resolve, reject) => {
-            const multiStep = new MultiStepInput<DebugConfigurationState>();
-            const state = {
-                config: {
-                    name: '',
-                    type: 'terminal',
-                    subtype: '',
-                } as any,
-            };
-
-            await multiStep.run((input, s) => this.selectConfigName(input, s), state);
-            await multiStep.run((input, s) => this.selectConfigType(input, s), state);
-            
-            let debugProfileConfigs = getConfiguration('debugpy').get<[]>('configs', [])
-
-
-            updateSetting('debugpy', 'configs', [...debugProfileConfigs, state.config]);z
-        });
+    const options = {
+        title: DebugProfileCreation.title,
+        value: '',
+        prompt: DebugProfileCreation.prompt,
+        validate: (value: string) =>
+            Promise.resolve(value && value.trim().length > 0 ? undefined : 'Enter a valid name'),
+        placeholder: 'Enter the name of the configuration',
+    };
+    const selection = await input.showInputBox(options);
+    if (selection === undefined) {
+        return;
     }
+    profileState.config.name = selection;
 
-    async selectConfigName(input: MultiStepInput<DebugConfigurationState>, state: DebugConfigurationState) {
-        const options = {
-            title: 'Create Debug Profile Configuration',
-            value: '',
-            prompt: 'Prompt',
-            validate: (value: string) =>
-                Promise.resolve(value && value.trim().length > 0 ? undefined : 'Enter a valid name'),
-            placeholder: 'Enter the name of the configuration',
-        };
-        const selection = await input.showInputBox(options);
-        if (selection === undefined) {
-            return;
-        }
-        state.config.name = selection;
-    }
+    await input.run((input, _s) => selectConfigType(input, profileState), profileState);
+    let debugProfileConfigs = workspace.getConfiguration('python').get<[]>('configs', []);
+    await updateSetting('python', 'configs', [...debugProfileConfigs, profileState.config]);
+}
 
-    async selectConfigType(input: MultiStepInput<DebugConfigurationState>, state: DebugConfigurationState) {
-        const items: QuickPickItem[] = [
-            { label: 'run', description: 'Run configuration' },
-            { label: 'debug', description: 'Debug configuration' },
-        ];
-        const selection = await input.showQuickPick({
-            items: items,
-            title: 'Create Debug Profile Configuration',
-            placeholder: 'Select the type of configuration',
-            canSelectMany: true,
-        });
-        if (selection === undefined || !Array.isArray(selection)) {
-            return;
-        }
-        state.config.subtype = selection.map((i) => i.label);
+async function selectConfigType(
+    input: MultiStepInput<DebugProfileState> | MultiStepInput<DebugConfigurationState>,
+    state: DebugProfileState,
+) {
+    const items: QuickPickItem[] = [
+        { label: DebugProfileType.debug, description: DebugProfileCreation.debugDescription },
+        { label: DebugProfileType.debugTesting, description: DebugProfileCreation.debugTestingDescription },
+    ];
+    const selection = await input.showQuickPick({
+        items: items,
+        // title: 'Create Debug Profile Configuration',
+        placeholder: DebugProfileCreation.selectConfigType.placeholder,
+        canSelectMany: true,
+    });
+    if (selection === undefined || !Array.isArray(selection)) {
+        return;
     }
+    state.config.debugProfile = selection.map((i) => i.label);
 }

@@ -158,9 +158,9 @@ export class PythonDebugConfigurationService implements IDebugConfigurationServi
                 description: DebugConfigStrings.pyramid.selectConfiguration.description,
             },
             {
-                label: 'Debug Profile',
+                label: DebugConfigStrings.debugProfile.selectConfiguration.label,
                 type: DebugConfigurationType.debugProfile,
-                description: 'Create a configuration for a specific debug profile',
+                description: DebugConfigStrings.debugProfile.selectConfiguration.description,
             },
         ];
         const debugConfigurations = new Map<
@@ -193,7 +193,7 @@ export class PythonDebugConfigurationService implements IDebugConfigurationServi
         });
         if (pick) {
             const pickedDebugConfiguration = debugConfigurations.get(pick.type)!;
-            return pickedDebugConfiguration(input, state);
+            return await input.run((input, s) => pickedDebugConfiguration(input, s), state);
         }
     }
 }

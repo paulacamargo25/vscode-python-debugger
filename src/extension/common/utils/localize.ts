@@ -12,6 +12,16 @@ export namespace AttachProcess {
     export const refreshList = l10n.t('Refresh process list');
 }
 
+export namespace DebugProfileCreation {
+    export const title = l10n.t('Create Debug Profile Configuration');
+    export const prompt = l10n.t('Add a name for the configuration');
+    export const debugDescription = l10n.t('Configuration for debugging your application');
+    export const debugTestingDescription = l10n.t('Configuration for debugging your test');
+    export const selectConfigType = {
+        placeholder: l10n.t('Select the types for the debug profile'),
+    };
+}
+
 export namespace DebugConfigStrings {
     export const debugStopped = l10n.t('Debug Stopped');
     export const selectConfiguration = {
@@ -146,6 +156,23 @@ export namespace DebugConfigStrings {
         export const enterDevelopmentIniPath = {
             title: l10n.t('Debug Pyramid'),
             invalid: l10n.t('Enter a valid file path'),
+        };
+    }
+    export namespace debugProfile {
+        export const snippet = {
+            name: l10n.t('Python Debugger: Debug Profile'),
+        };
+        export const selectConfiguration = {
+            label: l10n.t('Debug Profile'),
+            description: l10n.t('Create a configuration for a specific debug profile'),
+        };
+        export const configPromp = {
+            title: l10n.t('Debug Profile'),
+            prompt: l10n.t('Select the debug profile for which you want to create a debug configuration'),
+        };
+        export const createNew = {
+            label: l10n.t('Create new Debug Profile'),
+            description: l10n.t('Create a new debug profile configuration in settings.json'),
         };
     }
 }
