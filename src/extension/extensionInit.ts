@@ -49,7 +49,6 @@ import { openReportIssue } from './common/application/commands/reportIssueComman
 import { buildApi } from './api';
 import { IExtensionApi } from './apiTypes';
 import { registerHexDebugVisualizationTreeProvider } from './debugger/visualizers/inlineHexDecoder';
-import { DebugProfileCreationPicker } from './debugger/configuration/debugProfile/debugProfileCreationQuickPicker';
 import { showDebugSettingsProfileCreationPicker } from './debugger/configuration/debugProfile/debugProfileCreationQuickPicker';
 import { DebugProfileArguments, DebugProfileState, DebugProfileType } from './debugger/types';
 
