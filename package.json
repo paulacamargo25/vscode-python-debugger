@@ -510,7 +510,12 @@
                                 "default": "Python Debug Console",
                                 "description": "Display name of the debug console or terminal",
                                 "type": "string"
-                            }
+                            },
+                            "debugProfile": {
+                                "default": "",
+                                "description": "Name of the debug profile to use.",
+                                "type": "string"
+                            } 
                         }
                     }
                 },

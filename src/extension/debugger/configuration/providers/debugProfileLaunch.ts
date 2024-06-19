@@ -99,8 +99,9 @@ function getDefaultTestingDebugConfig(item: any): Partial<DebugConfigurationArgu
     return {
         name: item.name,
         type: DebuggerTypeName,
-        request: 'test',
+        request: 'launch',
         subProcess: true,
         debugProfile: DebugProfileType.debugTesting,
+        console: "integratedTerminal",
     };
 }
