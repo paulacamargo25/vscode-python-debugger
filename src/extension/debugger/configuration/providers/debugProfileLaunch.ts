@@ -102,6 +102,6 @@ function getDefaultTestingDebugConfig(item: any): Partial<DebugConfigurationArgu
         request: 'launch',
         subProcess: true,
         debugProfile: DebugProfileType.debugTesting,
-        console: "integratedTerminal",
+        console: 'integratedTerminal',
     };
 }

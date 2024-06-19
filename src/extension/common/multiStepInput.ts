@@ -200,7 +200,6 @@ export class MultiStepInput<S> implements IMultiStepInput<S> {
                     }
                 }
             }),
-            // input.onDidChangeSelection((selectedItems) => deferred.resolve(selectedItems[0])),
             input.onDidHide(() => {
                 if (!deferred.completed) {
                     deferred.resolve(undefined);

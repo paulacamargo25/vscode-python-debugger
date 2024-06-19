@@ -49,7 +49,6 @@ async function selectConfigType(
     ];
     const selection = await input.showQuickPick({
         items: items,
-        // title: 'Create Debug Profile Configuration',
         placeholder: DebugProfileCreation.selectConfigType.placeholder,
         canSelectMany: true,
     });
