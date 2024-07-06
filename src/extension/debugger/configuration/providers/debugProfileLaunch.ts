@@ -33,6 +33,8 @@ export async function buildDebugProfileLaunchDebugConfiguration(
                 label: item.name,
                 item: item,
                 description: `(${DebugProfileType.debug})`,
+                debugProfile: DebugProfileType.debug,
+
             };
         });
 
@@ -42,6 +44,7 @@ export async function buildDebugProfileLaunchDebugConfiguration(
             return {
                 label: item.name,
                 item: item,
+                debugProfile: DebugProfileType.debugTesting,
                 description: `(${DebugProfileType.debugTesting})`,
             };
         });
@@ -72,9 +75,9 @@ export async function buildDebugProfileLaunchDebugConfiguration(
         await input.run(() => showDebugSettingsProfileCreationPicker(input), state);
         return await input.run(() => buildDebugProfileLaunchDebugConfiguration(input, state), state);
     } else if ('item' in selection) {
-        if (selection.item.debugProfile?.includes(DebugProfileType.debug)) {
+        if (selection.debugProfile === DebugProfileType.debug) {
             Object.assign(state.config, getDefaultDebugConfig(selection.item));
-        } else if (selection.item.debugProfile?.includes(DebugProfileType.debugTesting)) {
+        } else if ((selection.debugProfile === DebugProfileType.debugTesting)) {
             Object.assign(state.config, getDefaultTestingDebugConfig(selection.item));
         }
     }

@@ -46,6 +46,7 @@ export type DebugConfigurationState = {
 
 export interface DebugProfileConfigQuickPickItem extends QuickPickItem {
     item: DebugProfileArguments;
+    debugProfile: DebugProfileType;
     description: string;
     kind?: QuickPickItemKind;
 }
