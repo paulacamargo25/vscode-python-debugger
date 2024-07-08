@@ -24,14 +24,24 @@ export interface IDebugConfigurationService extends DebugConfigurationProvider {
 export const IDynamicDebugConfigurationService = Symbol('IDynamicDebugConfigurationService');
 export interface IDynamicDebugConfigurationService extends DebugConfigurationProvider {}
 
-export enum DebugProfileType {
-    debug = 'debug',
-    debugTesting = 'debug.testing',
+export enum configType {
+    terminal = 'terminal',
+    test = 'test',
+}
+
+export enum configSubType {
+    testRun = 'testRun',
+    testDiscovery = 'testDiscovery',
+    testDebug = 'testDebug',
+
+    terminalRun = 'terminalRun',
+    terminalDebug = 'terminalDebug',
 }
 
 export type DebugProfileArguments = {
     name: string;
-    debugProfile?: DebugProfileType[];
+    type: configType;
+    subtype: configSubType[];
 };
 
 export type DebugProfileState = {
@@ -46,8 +56,6 @@ export type DebugConfigurationState = {
 
 export interface DebugProfileConfigQuickPickItem extends QuickPickItem {
     item: DebugProfileArguments;
-    debugProfile: DebugProfileType;
-    description: string;
     kind?: QuickPickItemKind;
 }
 
@@ -69,6 +77,7 @@ export enum DebugConfigurationType {
     launchPyramid = 'launchPyramid',
     pidAttach = 'pidAttach',
     debugProfile = 'debugProfile',
+    testingDebugProfile = 'tesingDebugProfile',
 }
 
 export enum PythonPathSource {

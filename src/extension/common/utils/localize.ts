@@ -15,8 +15,8 @@ export namespace AttachProcess {
 export namespace DebugProfileCreation {
     export const title = l10n.t('Create Debug Profile Configuration');
     export const prompt = l10n.t('Add a name for the configuration');
+    export const runDescription = l10n.t('Configuration for running your application');
     export const debugDescription = l10n.t('Configuration for debugging your application');
-    export const debugTestingDescription = l10n.t('Configuration for debugging your test');
     export const selectConfigType = {
         placeholder: l10n.t('Select the types for the debug profile'),
     };
@@ -173,6 +173,16 @@ export namespace DebugConfigStrings {
         export const createNew = {
             label: l10n.t('Create new Debug Profile'),
             description: l10n.t('Create a new debug profile configuration in settings.json'),
+        };
+    }
+
+    export namespace testingDebugProfile {
+        export const snippet = {
+            name: l10n.t('Python Debugger: Testing Debug Profile'),
+        };
+        export const selectConfiguration = {
+            label: l10n.t('Testing Debug Profile'),
+            description: l10n.t('Create a configuration for a specific testing debug profile'),
         };
     }
 }

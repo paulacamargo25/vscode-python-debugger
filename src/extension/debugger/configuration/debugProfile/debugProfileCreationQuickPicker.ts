@@ -5,18 +5,23 @@
 
 import { QuickPickItem } from 'vscode';
 import { MultiStepInput } from '../../../common/multiStepInput';
-import { DebugConfigurationState, DebugProfileArguments, DebugProfileState, DebugProfileType } from '../../types';
+import {
+    configSubType,
+    configType,
+    DebugConfigurationState,
+    DebugProfileArguments,
+    DebugProfileState,
+} from '../../types';
 import { updateSetting } from '../../../common/settings';
 import { workspace } from 'vscode';
 import { DebugProfileCreation } from '../../../common/utils/localize';
 
-export async function showDebugSettingsProfileCreationPicker(
-    input: MultiStepInput<DebugProfileState> | MultiStepInput<DebugConfigurationState>,
-): Promise<void> {
+export async function showDebugSettingsProfileCreationPicker(input: MultiStepInput<DebugProfileState>): Promise<void> {
     const profileState = {
         config: {
             name: '',
-            debugProfile: [],
+            type: '' as configType,
+            subtype: [],
         } as Partial<DebugProfileArguments>,
     } as DebugProfileState;
 
@@ -44,8 +49,8 @@ async function selectConfigType(
     state: DebugProfileState,
 ) {
     const items: QuickPickItem[] = [
-        { label: DebugProfileType.debug, description: DebugProfileCreation.debugDescription },
-        { label: DebugProfileType.debugTesting, description: DebugProfileCreation.debugTestingDescription },
+        { label: configSubType.terminalRun, description: DebugProfileCreation.runDescription },
+        { label: configSubType.terminalDebug, description: DebugProfileCreation.debugDescription },
     ];
     const selection = await input.showQuickPick({
         items: items,
@@ -55,5 +60,7 @@ async function selectConfigType(
     if (selection === undefined || !Array.isArray(selection)) {
         return;
     }
-    state.config.debugProfile = selection.map((i) => i.label);
+
+    state.config.type = configType.terminal;
+    state.config.subtype = selection.map((i) => i.label);
 }

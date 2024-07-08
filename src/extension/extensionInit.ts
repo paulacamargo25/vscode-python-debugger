@@ -50,7 +50,7 @@ import { buildApi } from './api';
 import { IExtensionApi } from './apiTypes';
 import { registerHexDebugVisualizationTreeProvider } from './debugger/visualizers/inlineHexDecoder';
 import { showDebugSettingsProfileCreationPicker } from './debugger/configuration/debugProfile/debugProfileCreationQuickPicker';
-import { DebugProfileArguments, DebugProfileState, DebugProfileType } from './debugger/types';
+import { configSubType, DebugProfileArguments, DebugProfileState } from './debugger/types';
 
 export async function registerDebugger(context: IExtensionContext): Promise<IExtensionApi> {
     const childProcessAttachService = new ChildProcessAttachService();
@@ -107,10 +107,10 @@ export async function registerDebugger(context: IExtensionContext): Promise<IExt
             }
             const debugProfileConfigs: DebugProfileArguments[] = getConfiguration('python')
                 .get<[]>('configs', [])
-                .filter((item: DebugProfileArguments) => item.debugProfile?.includes(DebugProfileType.debug));
+                .filter((item: DebugProfileArguments) => item.subtype?.includes(configSubType.terminalDebug));
 
             if (debugProfileConfigs.length > 0) {
-                if (debugProfileConfigs.length == 1) {
+                if (debugProfileConfigs.length === 1) {
                     const config = await getDebugProfileConfiguration(debugProfileConfigs[0].name, file);
                     startDebugging(undefined, config);
                 } else {

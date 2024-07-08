@@ -28,6 +28,7 @@ export async function activate(context: IExtensionContext): Promise<IExtensionAp
 
     traceLog(`Name: Python Debugger`);
     traceLog(`Module: debugpy`);
+    traceLog(`Debug Profile experiment`);
 
     try {
         api = await registerDebugger(context);

@@ -135,12 +135,6 @@
                     "description": "%debugpy.debugJustMyCode%",
                     "scope": "resource",
                     "type": "boolean"
-                },
-                "python.configs": {
-                    "default": [],
-                    "description": "Debug Configurations",
-                    "scope": "resource",
-                    "type": "array"
                 }
             },
             "title": "Python Debugger",
