@@ -21,6 +21,7 @@ import { buildRemoteAttachConfiguration } from './providers/remoteAttach';
 import { IDebugConfigurationResolver } from './types';
 import { buildFileWithArgsLaunchDebugConfiguration } from './providers/fileLaunchWithArgs';
 import { buildDebugProfileLaunchDebugConfiguration } from './providers/debugProfileLaunch';
+import { buildTestingDebugProfileLaunchDebugConfiguration } from './providers/testingDebugProfileLaunch';
 
 @injectable()
 export class PythonDebugConfigurationService implements IDebugConfigurationService {
@@ -113,6 +114,16 @@ export class PythonDebugConfigurationService implements IDebugConfigurationServi
         type DebugConfigurationQuickPickItem = QuickPickItem & { type: DebugConfigurationType };
         const items: DebugConfigurationQuickPickItem[] = [
             {
+                label: DebugConfigStrings.debugProfile.selectConfiguration.label,
+                type: DebugConfigurationType.debugProfile,
+                description: DebugConfigStrings.debugProfile.selectConfiguration.description,
+            },
+            {
+                label: DebugConfigStrings.testingDebugProfile.selectConfiguration.label,
+                type: DebugConfigurationType.testingDebugProfile,
+                description: DebugConfigStrings.testingDebugProfile.selectConfiguration.description,
+            },
+            {
                 label: DebugConfigStrings.file.selectConfiguration.label,
                 type: DebugConfigurationType.launchFile,
                 description: DebugConfigStrings.file.selectConfiguration.description,
@@ -157,11 +168,6 @@ export class PythonDebugConfigurationService implements IDebugConfigurationServi
                 type: DebugConfigurationType.launchPyramid,
                 description: DebugConfigStrings.pyramid.selectConfiguration.description,
             },
-            {
-                label: DebugConfigStrings.debugProfile.selectConfiguration.label,
-                type: DebugConfigurationType.debugProfile,
-                description: DebugConfigStrings.debugProfile.selectConfiguration.description,
-            },
         ];
         const debugConfigurations = new Map<
             DebugConfigurationType,
@@ -180,6 +186,10 @@ export class PythonDebugConfigurationService implements IDebugConfigurationServi
         debugConfigurations.set(DebugConfigurationType.remoteAttach, buildRemoteAttachConfiguration);
         debugConfigurations.set(DebugConfigurationType.launchPyramid, buildPyramidLaunchConfiguration);
         debugConfigurations.set(DebugConfigurationType.debugProfile, buildDebugProfileLaunchDebugConfiguration);
+        debugConfigurations.set(
+            DebugConfigurationType.testingDebugProfile,
+            buildTestingDebugProfileLaunchDebugConfiguration,
+        );
 
         state.config = {};
         const pick = await input.showQuickPick<
