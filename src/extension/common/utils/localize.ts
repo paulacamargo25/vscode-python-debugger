@@ -218,3 +218,9 @@ export namespace pickArgsInput {
 export namespace DebugVisualizers {
     export const hexDecoder = l10n.t('Show as Hex');
 }
+
+export namespace RunDebugProfile {
+    export const title = l10n.t('Run Debug Profile Configuration');
+    export const placeholder = l10n.t('Select a debug profile configuration');
+
+}

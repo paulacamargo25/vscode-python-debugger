@@ -41,7 +41,7 @@ import { DebugSessionTelemetry } from './common/application/debugSessionTelemetr
 import { JsonLanguages, LaunchJsonCompletionProvider } from './debugger/configuration/launch.json/completionProvider';
 import { LaunchJsonUpdaterServiceHelper } from './debugger/configuration/launch.json/updaterServiceHelper';
 import { ignoreErrors } from './common/promiseUtils';
-import { DebugVisualizers, pickArgsInput } from './common/utils/localize';
+import { DebugVisualizers, pickArgsInput, RunDebugProfile } from './common/utils/localize';
 import { DebugPortAttributesProvider } from './debugger/debugPort/portAttributesProvider';
 import { getDebugProfileConfiguration } from './debugger/configuration/launch.json/launchJsonReader';
 import { DebugpySocketsHandler } from './debugger/hooks/debugpySocketsHandler';
@@ -122,8 +122,8 @@ export async function registerDebugger(context: IExtensionContext): Promise<IExt
                             };
                         }),
                         {
-                            title: 'Run Debug Profile Configuration',
-                            placeHolder: 'Select a debug profile configuration',
+                            title: RunDebugProfile.title,
+                            placeHolder: RunDebugProfile.placeholder,
                         },
                     );
                     if (selection) {
