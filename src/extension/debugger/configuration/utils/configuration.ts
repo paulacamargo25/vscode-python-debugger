@@ -48,8 +48,8 @@ export async function configurePort(
 
 async function getPossiblePaths(globPatterns: string[], regex: RegExp): Promise<Uri[]> {
     const foundPathsPromises = (await Promise.allSettled(
-        globPatterns.map(async (pattern): Promise<Uri[]> => await workspace.findFiles(pattern)),
-    )) as { status: string; value: [] }[];
+        globPatterns.map(async (pattern): Promise<Uri[]> => await workspace.findFiles2New([pattern])),
+    )) as { status: string; value: [] }[];    
     const possiblePaths: Uri[] = [];
     foundPathsPromises.forEach((result) => possiblePaths.push(...result.value));
     const finalPaths = await asyncFilter(possiblePaths, async (possiblePath) =>

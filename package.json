@@ -8,7 +8,10 @@
         "portsAttributes",
         "contribIssueReporter",
         "debugVisualization",
-        "contribViewsWelcome"
+        "contribViewsWelcome",
+        "findFiles2New",
+		"findTextInFilesNew",
+        "TextSearchProviderNew"
     ],
     "license": "MIT",
     "homepage": "https://github.com/Microsoft/vscode-python-debugger",
