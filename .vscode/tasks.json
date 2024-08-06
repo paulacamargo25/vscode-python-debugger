@@ -18,6 +18,18 @@
 			}
 		},
 		{
+            "label": "Compile",
+            "type": "npm",
+            "script": "compile",
+            "isBackground": true,
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "group": {
+                "kind": "build",
+            }
+        },
+		{
 			"type": "npm",
 			"script": "watch-tests",
 			"problemMatcher": "$tsc-watch",

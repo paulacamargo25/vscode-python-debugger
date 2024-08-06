@@ -90,7 +90,7 @@ suite('Debugging - pythonInlineProvider', () => {
                 },
             ],
         });
-        const file = path.join(WS_ROOT, 'pythonFiles', 'testVarTypes.py');
+        const file = path.join(WS_ROOT, 'python_files', 'testVarTypes.py');
         let document = await workspace.openTextDocument(file);
         const inlineValueProvider = new PythonInlineValueProvider();
 
@@ -234,7 +234,7 @@ suite('Debugging - pythonInlineProvider', () => {
                 },
             ],
         });
-        const file = path.join(WS_ROOT, 'pythonFiles', 'testClassVarType.py');
+        const file = path.join(WS_ROOT, 'python_files', 'testClassVarType.py');
         let document = await workspace.openTextDocument(file);
         const inlineValueProvider = new PythonInlineValueProvider();
 
@@ -342,7 +342,7 @@ suite('Debugging - pythonInlineProvider', () => {
                 },
             ],
         });
-        const file = path.join(WS_ROOT, 'pythonFiles', 'testClassVarType.py');
+        const file = path.join(WS_ROOT, 'python_files', 'testClassVarType.py');
         let document = await workspace.openTextDocument(file);
         const inlineValueProvider = new PythonInlineValueProvider();
 
@@ -401,7 +401,7 @@ suite('Debugging - pythonInlineProvider', () => {
                 },
             ],
         });
-        const file = path.join(WS_ROOT, 'pythonFiles', 'testAssignmentExp.py');
+        const file = path.join(WS_ROOT, 'python_files', 'testAssignmentExp.py');
         let document = await workspace.openTextDocument(file);
         const inlineValueProvider = new PythonInlineValueProvider();
 

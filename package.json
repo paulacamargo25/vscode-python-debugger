@@ -555,7 +555,8 @@
         "format-check": "prettier --check 'src/**/*.ts' 'build/**/*.yml' '.github/**/*.yml'",
         "format-fix": "prettier --write 'src/**/*.ts' 'build/**/*.yml' '.github/**/*.yml'",
         "test": "node ./out/test/runTest.js",
-        "vsce-package": "npx @vscode/vsce package -o python-debugger.vsix"
+        "vsce-package": "npx @vscode/vsce package -o python-debugger.vsix",
+        "testDebugger": "node ./out/test/debuggerTest.js"
     },
     "devDependencies": {
         "@types/chai": "^4.3.4",

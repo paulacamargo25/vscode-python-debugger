@@ -38,5 +38,85 @@
 			],
 			"preLaunchTask": "tasks: watch-tests"
 		},
+		{
+            "name": "Tests (Debugger, VS Code, *.test.ts)",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "${workspaceFolder}/src/testMultiRootWkspc/multi.code-workspace",
+                "--disable-extensions",
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--extensionTestsPath=${workspaceFolder}/out/test"
+            ],
+            "sourceMaps": true,
+            "smartStep": true,
+            "outFiles": ["${workspaceFolder}/out/**/*", "!${workspaceFolder}/**/node_modules**/*"],
+			"preLaunchTask": "tasks: watch-tests",
+            "env": {
+                "IS_CI_SERVER_TEST_DEBUGGER": "1"
+            },
+            "skipFiles": ["<node_internals>/**"]
+        },
+		{
+            // Note, for the smoke test you want to debug, you may need to copy the file,
+            // rename it and remove a check for only smoke tests.
+            "name": "Tests (Smoke, VS Code, *.test.ts)",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "${workspaceFolder}/src/testMultiRootWkspc/smokeTests",
+                "--disable-extensions",
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--extensionTestsPath=${workspaceFolder}/out/test"
+            ],
+            "env": {
+                "VSC_PYTHON_CI_TEST_GREP": "Smoke Test",
+                "VSC_PYTHON_SMOKE_TEST": "1",
+                "TEST_FILES_SUFFIX": "smoke.test"
+            },
+            "sourceMaps": true,
+            "outFiles": ["${workspaceFolder}/out/**/*.js", "!${workspaceFolder}/**/node_modules**/*"],
+            "preLaunchTask": "Compile",
+            "skipFiles": ["<node_internals>/**"]
+        },
+		{
+            "name": "Tests (Single Workspace, VS Code, *.test.ts)",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "${workspaceFolder}/src/test",
+                "--disable-extensions",
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--extensionTestsPath=${workspaceFolder}/out/test"
+            ],
+            "env": {
+                "VSC_PYTHON_CI_TEST_GREP": "" // Modify this to run a subset of the single workspace tests
+            },
+            "sourceMaps": true,
+            "outFiles": ["${workspaceFolder}/out/**/*.js", "!${workspaceFolder}/**/node_modules**/*"],
+            "preLaunchTask": "Compile",
+            "skipFiles": ["<node_internals>/**"]
+        },
+		{
+            "name": "Tests (Multiroot, VS Code, *.test.ts)",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "${workspaceFolder}/src/testMultiRootWkspc/multi.code-workspace",
+                "--disable-extensions",
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--extensionTestsPath=${workspaceFolder}/out/test"
+            ],
+            "sourceMaps": true,
+            "smartStep": true,
+            "outFiles": ["${workspaceFolder}/out/**/*", "!${workspaceFolder}/**/node_modules**/*"],
+            "preLaunchTask": "Compile",
+            "skipFiles": ["<node_internals>/**"]
+        },
+
 	]
 }
