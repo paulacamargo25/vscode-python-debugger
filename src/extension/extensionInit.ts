@@ -54,8 +54,8 @@ import { registerHexDebugVisualizationTreeProvider } from './debugger/visualizer
 import { PythonInlineValueProvider } from './debugger/inlineValue/pythonInlineValueProvider';
 import { traceLog } from './common/log/logging';
 import { registerTriggerForDebugpyInTerminal } from './shellIntegration/debugpyTrigger';
-import { addPathToPythonpath } from './shellIntegration/utils';
 import { appendPythonPath } from './common/variables/environment';
+import { createPythonTerminal } from './shellIntegration/debugTerminal';
 
 export async function registerDebugger(context: IExtensionContext): Promise<IExtensionApi> {
     const childProcessAttachService = new ChildProcessAttachService();
@@ -251,9 +251,16 @@ export async function registerDebugger(context: IExtensionContext): Promise<IExt
     );
     
     appendPythonPath(process.env, "my-random-path", )
+    appendPythonPath(process.env, 'my-random-path');
 
     context.subscriptions.push(
-        window.onDidStartTerminalShellExecution(async (e) => {await registerTriggerForDebugpyInTerminal(e)})
+        window.onDidStartTerminalShellExecution(async (e) => {
+            await registerTriggerForDebugpyInTerminal(e);
+        }),
+    );
+
+    registerCommand(Commands.OpenPythonDebugTerminal, (_command, folder, config) =>
+        createPythonTerminal(folder, config),
     );
 
     return buildApi();

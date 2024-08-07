@@ -72,6 +72,11 @@
                 "category": "Python Debugger",
                 "command": "debugpy.reportIssue",
                 "title": "%debugpy.command.reportIssue.title%"
+            },
+            {
+                "category": "Python Debugger",
+                "command": "debugpy.openPythonDebugTerminal",
+                "title": "%debugpy.command.openPythonDebugTerminal.title%"
             }
         ],
         "menus": {
