@@ -54,7 +54,6 @@ import { registerHexDebugVisualizationTreeProvider } from './debugger/visualizer
 import { PythonInlineValueProvider } from './debugger/inlineValue/pythonInlineValueProvider';
 import { traceLog } from './common/log/logging';
 import { registerTriggerForDebugpyInTerminal } from './shellIntegration/debugpyTrigger';
-import { appendPythonPath } from './common/variables/environment';
 import { createPythonTerminal } from './shellIntegration/debugTerminal';
 
 export async function registerDebugger(context: IExtensionContext): Promise<IExtensionApi> {
@@ -249,9 +248,6 @@ export async function registerDebugger(context: IExtensionContext): Promise<IExt
         'dynamicPythonConfigAvailable',
         window.activeTextEditor?.document.languageId === 'python',
     );
-    
-    appendPythonPath(process.env, "my-random-path", )
-    appendPythonPath(process.env, 'my-random-path');
 
     context.subscriptions.push(
         window.onDidStartTerminalShellExecution(async (e) => {
@@ -259,9 +255,7 @@ export async function registerDebugger(context: IExtensionContext): Promise<IExt
         }),
     );
 
-    registerCommand(Commands.OpenPythonDebugTerminal, (_command, folder, config) =>
-        createPythonTerminal(folder, config),
-    );
+    registerCommand(Commands.OpenPythonDebugTerminal, () => createPythonTerminal());
 
     return buildApi();
 }

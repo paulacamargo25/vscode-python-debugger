@@ -24,15 +24,15 @@ function getDefaultDebugConfiguration(): DebugConfiguration {
         name: `Debug File`,
         type: DebuggerTypeName,
         request: 'attach',
-        listen: {
-            host: 'localhost',
-            port: 5679,
+        connect: {
+            port: 5678,
         },
     };
 }
 
 export async function registerTriggerForDebugpyInTerminal(e: TerminalShellExecutionStartEvent) {
     if (e.execution.commandLine.isTrusted && checkCommand(e.execution.commandLine.value)) {
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // 2-second delay
         const config = getDefaultDebugConfiguration();
         startDebugging(undefined, config);
     }
