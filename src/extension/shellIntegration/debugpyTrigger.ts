@@ -4,22 +4,19 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { DebugConfiguration, TerminalShellExecutionStartEvent, Uri } from 'vscode';
-import { getInterpreterDetails, runPythonExtensionCommand } from '../common/python';
-import { Commands } from '../common/constants';
-import { noop } from 'lodash';
 import { startDebugging } from '../common/vscodeapi';
 import { DebuggerTypeName } from '../constants';
 
 function checkCommand(command: string): boolean {
     const lower = command.toLowerCase();
-    return lower.startsWith('python -m debugpy');
+    return lower.startsWith('debugpy');
 }
 
 async function getFile(e: TerminalShellExecutionStartEvent, filePath: string): Promise<Uri> {
     if (await fs.pathExists(filePath)) {
         return Uri.file(filePath);
     }
-    return Uri.parse(path.join(e.execution.cwd?.path || "", filePath));
+    return Uri.parse(path.join(e.execution.cwd?.path || '', filePath));
 }
 
 function getDefaultDebugConfiguration(): DebugConfiguration {
@@ -27,10 +24,10 @@ function getDefaultDebugConfiguration(): DebugConfiguration {
         name: `Debug File`,
         type: DebuggerTypeName,
         request: 'attach',
-        connect: {
+        listen: {
             host: 'localhost',
-            port: 5679
-        }
+            port: 5679,
+        },
     };
 }
 

@@ -9,10 +9,9 @@ export async function createPythonTerminal(workspaceFolder?: vscode.WorkspaceFol
         env: {
             DEBUGPY_EXTRA_ARGV: '--listen 5679',
             PYTHONPATH: path.join(EXTENSION_ROOT_DIR, 'bundled', 'libs', 'debugpy'),
-            PATH: path.join(EXTENSION_ROOT_DIR, 'bundled', 'libs', 'debugpy'),            
+            PATH: path.join(EXTENSION_ROOT_DIR, 'bundled', 'libs', 'debugpy'),
         },
     });
     terminal.sendText('pip install debugpy');
     terminal.show();
-
 }
