@@ -12,6 +12,5 @@ export async function createPythonTerminal() {
             PATH: path.join(EXTENSION_ROOT_DIR, 'bundled', 'libs', 'bin'),
         },
     });
-    // terminal.sendText('pip install debugpy');
     terminal.show();
 }
